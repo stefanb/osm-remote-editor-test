@@ -8,6 +8,46 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript">
+//  function remoteEditHandler(bbox, object) {
+  function remoteEditHandlerIframe() {
+    var loaded = false,
+        url = document.location.protocol === "https:" ?
+        "https://127.0.0.1:8112/load_and_zoom?" :
+        "http://127.0.0.1:8111/load_and_zoom?",
+        query = {
+          left: 13.951254622840882,
+          top: 46.47558881271165,
+          right: 13.961405618286133,
+          bottom: 46.47287664023273
+          /*left: bbox.getWest() - 0.0001,
+          top: bbox.getNorth() + 0.0001,
+          right: bbox.getEast() + 0.0001,
+          bottom: bbox.getSouth() - 0.0001*/
+        };
+
+    //if (object) query.select = object.type + object.id;
+
+    var iframe = $('<iframe>')
+        .hide()
+        .appendTo('body')
+        .attr("src", url + querystring.stringify(query))
+        .on('load', function() {
+          $(this).remove();
+          loaded = true;
+        });
+
+    setTimeout(function () {
+      if (!loaded) {
+        alert('site.index.remote_failed');
+        iframe.remove();
+      }
+    }, 1000);
+
+    return false;
+  }
+    </script>
   </head>
   <body>
     <section class="page-header">
@@ -20,24 +60,26 @@
 
     <section class="main-content">
       <h3>
+        <a id="atag" class="anchor" href="#iframe-tag" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        a link
+      </h3>
+
+<p>Using &lt;a&gt; tag</p>
+<a class="btn" href="https://127.0.0.1:8112/load_and_zoom?left=13.951254622840882&top=46.47558881271165&right=13.961405618286133&bottom=46.47287664023273">Load and zoom in Josm</a>
+
+      <h3>
         <a id="iframetag" class="anchor" href="#iframe-tag" aria-hidden="true"><span class="octicon octicon-link"></span></a>
         iframe tag
       </h3>
 
+
 <p>Using &lt;iframe&gt; tag</p>
-<a class="btn" href="javascript:alert('iframe')">Load and zoom in Josm</a>
+<a class="btn" href="javascript:remoteEditHandlerIframe()">Load and zoom in Josm</a>
 
 <h3><a id="imgtag" class="anchor" href="#img-tag" aria-hidden="true"><span class="octicon octicon-link"></span></a>img tag</h3>
 
 <p>Using &lt;img&gt; tag</p>
-<a class="btn" href="javascript:loadUsingImgTag()">Load and zoom in Josm</a>
-<script type="text/javascript">
-function loadUsingImgTag()
-{
-  alert(2);
-}
-  
-</script>
+<a class="btn" href="javascript:remoteEditHandlerImg()">Load and zoom in Josm</a>
       <!--footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/stefanb/osm-remote-editor-test">Osm-remote-editor-test</a> is maintained by <a href="https://github.com/stefanb">stefanb</a>.</span>
 
